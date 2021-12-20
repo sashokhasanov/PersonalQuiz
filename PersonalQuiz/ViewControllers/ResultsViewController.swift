@@ -9,17 +9,22 @@ import UIKit
 
 class ResultsViewController: UIViewController {
     
+    var answers: [Answer]!
     
-    // 1. Передать сюда массив с ответами
-    // 2. Определить наиболее часто встречающийся тип животного
-    // 3. Отобразить результат в соответсвии с этим живтным
-    // 4. Избавится от кнопки возврата назад на экран результатов
-
+    @IBOutlet weak var resultLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
         
+        let result = getAnimalType()
+        resultLabel.text = "Вы - \(result.rawValue)!"
+        descriptionLabel.text = result.definition
     }
 
+    private func getAnimalType() -> AnimalType {
+        let results = answers.reduce(into: [:]) { result, answer in result[answer.type, default: 0] += 1 }
+        return results.sorted(by: { $0.value > $1.value }).first?.key ?? .dog
+    }
 
 }
