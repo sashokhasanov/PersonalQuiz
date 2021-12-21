@@ -3,11 +3,14 @@
 //  PersonalQuiz
 //
 //  Created by brubru on 20.12.2021.
+//  Contributed by sashokhasanov on 21.12.2021.
 //
 
 import UIKit
 
 class QuestionViewController: UIViewController {
+    
+    // MARK: - IBOutlets
     @IBOutlet weak var questionLabel: UILabel!
     
     @IBOutlet weak var singleStackView: UIStackView!
@@ -30,13 +33,15 @@ class QuestionViewController: UIViewController {
     
     @IBOutlet weak var questionProgressView: UIProgressView!
     
+    // MARK: - private properties
     private let questions = Question.getQuestions()
     private var questionIndex = 0
-    private var answersChoosen: [Answer] = []
+    private var answersChosen: [Answer] = []
     private var currentAnswers: [Answer] {
         questions[questionIndex].answers
     }
     
+    // MARK: - Override methods
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -44,14 +49,15 @@ class QuestionViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let resultsViewController = segue.destination as! ResultsViewController
-        resultsViewController.answers = answersChoosen
+        resultsViewController.answers = answersChosen
     }
 
+    // MARK: - IBActions
     @IBAction func singleAnswerButtonPressed(_ sender: UIButton) {
         guard let buttonIndex = singleButtons.firstIndex(of: sender) else { return }
         
         let currentAnswer = currentAnswers[buttonIndex]
-        answersChoosen.append(currentAnswer)
+        answersChosen.append(currentAnswer)
         
         nextQuestion()
     }
@@ -59,7 +65,7 @@ class QuestionViewController: UIViewController {
     @IBAction func multipleAnswerButtonPressed() {
         for (multipleSwitch, answer) in zip(multipleSwitches, currentAnswers) {
             if multipleSwitch.isOn {
-                answersChoosen.append(answer)
+                answersChosen.append(answer)
             }
         }
         
@@ -68,7 +74,7 @@ class QuestionViewController: UIViewController {
     
     @IBAction func rangedAnswerButtonPressed() {
         let index = lrintf(rangedSlider.value)
-        answersChoosen.append(currentAnswers[index])
+        answersChosen.append(currentAnswers[index])
         
         nextQuestion()
     }
@@ -91,7 +97,6 @@ extension QuestionViewController {
         title = "Вопрос № \(questionIndex + 1) из \(questions.count)"
         
         showCurrentAnswers(for: currentQuestion.type)
-        
     }
     
     private func showCurrentAnswers(for type: ResponseType) {

@@ -3,6 +3,7 @@
 //  PersonalQuiz
 //
 //  Created by brubru on 20.12.2021.
+//  Contributed by sashokhasanov on 21.12.2021.
 //
 
 import UIKit
@@ -26,7 +27,6 @@ class ResultsViewController: UIViewController {
 
     private func getResultAnimalType() -> AnimalType {
         let results = answers.reduce(into: [:]) { result, answer in result[answer.type, default: 0] += 1 }
-        return results.sorted(by: { $0.value > $1.value }).first?.key ?? .dog
+        return results.max(by: {$0.value < $1.value})?.key ?? .dog
     }
-
 }
